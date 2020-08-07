@@ -21,62 +21,64 @@
 //
 // Use your function to create a card for each of the articles, and append each card to the DOM.
 
-axios.get('https://lambda-times-backend.herokuapp.com/articles')
-    .then(response => {
-        const articleData = response.data.articles; 
-        Object.values(articleData).forEach((articles) => {
-            articles.forEach((article) => {
-                cardContainer.appendChild(articleMaker(article));
-            })
-        })
 
-    })
+axios.get('https://lambda-times-api.herokuapp.com/articles')
+    .then( (working) => {
+        const articlesContainer = document.querySelector('.cards-container')
+        for (const key in working.data.articles) {
+                const topicArticles = working.data.articles[key];
+                topicArticles.forEach( (article) => {
+                    console.log(article);
+                    const articleElement = createArticle(article);
+                    articlesContainer.appendChild(articleElement)
+                });
+            }
+        })
     .catch(error => {
-        console.log('there' + error); 
+        console.log(error); 
 }); 
 
-const cardContainer = document.querySelector('.cards-container'); 
 
+const createArticle = function (object) {
 
-function articleMaker(object){
-    
-    //Creating elements
+    //create new elements
 
-    const card = document.createElement('div'); 
+    const card = document.createElement('div');
     const headline = document.createElement('div');
-    const author = document.createElement('div'); 
-    const authorDiv = document.createElement('div');
+    const author = document.createElement('div');
+    const imgContainer = document.createElement('div');
     const image = document.createElement('img');
     const authorName = document.createElement('span');
 
-    //Adding Classes
+    //adding classes 
 
-    card.classList.add('card'); 
-    headline.classList.add('headline'); 
+    card.classList.add('card');
+    headline.classList.add('headline');
     author.classList.add('author');
-    authorDiv.classList.add('img-container');
-
-    image.setAttribute("src", object.authorPhoto);
+    imgContainer.classList.add('img-container');
+  
+    //adding text content
     
-    //Text Content
-
     headline.textContent = object.headline;
-    authorName.textContent = object.authorName;
+    authorName.textContent = `By ${object.authorName}`;
 
-    // Setting up page
+    //setting attribute
 
-    card.appendChild(headline); 
-    card.appendChild(author); 
-    // image.src = articleObj.authorPhoto;
-    authorDiv.appendChild(image);
-    author.appendChild(authorDiv);  
-    authorDiv.appendChild(authorName); 
+    image.setAttribute('src', object.authorPhoto);
 
-    // event listener 
+    //creating structure
+  
+    card.appendChild(headline);
+    card.appendChild(author);
+    author.appendChild(imgContainer);
+    imgContainer.appendChild(image);
+    author.appendChild(authorName);
+
+    //event listener
+
     card.addEventListener('click', () => {
-        console.log(headline.textContent); 
+        console.log(object.headline);
     });
 
-    // return
-    return card; 
-} 
+    return card;
+};

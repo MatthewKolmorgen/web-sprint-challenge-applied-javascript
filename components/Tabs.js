@@ -18,7 +18,7 @@ axios.get('https://lambda-times-backend.herokuapp.com/topics')
     })
     .catch(error => {
         console.log(error); 
-    }); 
+}); 
 
 function tabMaker(topic) {
     const tab = document.createElement('div'); 
@@ -27,4 +27,4 @@ function tabMaker(topic) {
     return tab;
 } 
 
-const tabHolder = document.querySelector('div.topics'); 
+const tabHolder = document.querySelector('div .topics'); 
